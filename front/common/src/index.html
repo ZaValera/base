@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Base</title>
+    <% for (const css of htmlWebpackPlugin.files.css) { %>
+    <link href="<%= css %>" rel="stylesheet">
+    <% } %>
+</head>
+<body>
+<div class="base-wrapper">
+    asdfasdf
+</div>
+<% for (const js of htmlWebpackPlugin.files.js) { %>
+<script type="text/javascript" src="<%= js %>"></script>
+<% } %>
+</body>
+</html>

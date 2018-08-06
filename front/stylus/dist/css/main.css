@@ -1,0 +1,20 @@
+@font-face {
+  font-family: 'Open Sans';
+  src: url(/dist/fonts/opensans-regular-webfont_03ea51bc416a0c9aad3b439ad4298912.eot);
+  src: local('Open Sans'), local('OpenSans'), url(/dist/fonts/opensans-regular-webfont_03ea51bc416a0c9aad3b439ad4298912.eot?#iefix) format('embedded-opentype'), url(/dist/fonts/opensans-regular-webfont_c974cfd0a66a77286a81556348e054d6.woff) format('woff'), url(/dist/fonts/opensans-regular-webfont_f1e63c5016879f892455264069a7ad71.ttf) format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: url(/dist/images/unicorn_8d7d57e80da115bf78cdee0fd1a661ad.png) 0 0 no-repeat;
+}
+
+.page-pageWrapper-1dWEKe {
+  display: block;
+}
+
+.dummy-dummyWrap-2h-Fef {
+  display: block;
+}
+
