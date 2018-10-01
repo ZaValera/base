@@ -4,6 +4,7 @@ import {RoutedRedirect, Redirect} from '../Redirect/Redirect';
 export class Page extends React.PureComponent {
     constructor(props) {
         super(props);
+        debugger;
     }
 
     render() {

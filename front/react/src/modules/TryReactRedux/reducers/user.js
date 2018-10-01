@@ -1,6 +1,6 @@
 const initialUser = {
-    firstName: 'Foo',
-    lastName: 'Bar',
+    firstName: 'Ivan',
+    lastName: 'Petrov',
     balance: 0,
 };
 

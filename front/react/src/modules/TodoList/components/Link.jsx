@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Link = ({ active, children, onClick }) => {
-    debugger;
     return (
     <button
         onClick={onClick}

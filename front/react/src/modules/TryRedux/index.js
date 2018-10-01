@@ -32,8 +32,16 @@ const selector = createSelector(
     }
 );
 
-console.log(selector(store.getState()));
+const selector2 = createSelector(
+    [temperatureSelector],
+    (temperature) => {
+        console.log('selector2');
+        return temperature;
+    }
+);
+
+console.log(selector2(store.getState()));
 
 bindedWeatherActions.setPressure(123);
 
-console.log(selector(store.getState()));
+console.log(selector2(store.getState()));
