@@ -5,5 +5,4 @@ import weather from './weather';
 export default combineReducers({
     user,
     weather,
-    //context: contextReducer,
 });

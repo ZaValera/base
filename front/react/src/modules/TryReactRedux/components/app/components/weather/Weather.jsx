@@ -1,29 +1,22 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {connect as reduxConnect} from 'react-redux';
 import {setPressure} from '../../../../actions/weather';
-import {getProvider} from '../../../../contextProvider';
-import {ButtonContainer} from './components/button/Button'
+import {Button} from './components/button/Button'
 
 export function Weather(props) {
-    const ContextProvider = getProvider({
-        status: props.status,
-    });
-
     return (
-        <ContextProvider>
-            <div onClick={(e) => {
-                e.stopPropagation();
-                props.onClick()
-            }}>
-                <div>{props.temperature}</div>
-                <div>{props.pressure}</div>
-                <ButtonContainer/>
-            </div>
-        </ContextProvider>
+        <div onClick={(e) => {
+            e.stopPropagation();
+            props.onClick()
+        }}>
+            <div>{props.temperature}</div>
+            <div>{props.pressure}</div>
+            <Button name={'Button'}/>
+        </div>
     );
 }
 
-export const WeatherContainer = connect(
+export const WeatherContainer = reduxConnect(
     (state) => {
         return {
             pressure: state.weather.pressure,

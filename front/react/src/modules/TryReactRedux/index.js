@@ -5,7 +5,7 @@ import {Provider} from 'react-redux';
 import reducers from './reducers';
 import {AppContainer} from './components/app/App';
 
-const store = createStore(reducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+export const store = createStore(reducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 //store нужно передать либо через Provider либо в качестве props
 //Если прокидывать как props, то нужно будет прокидывать store в каждый компонент, который обернут в connect
