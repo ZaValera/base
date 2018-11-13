@@ -1,39 +1,61 @@
-import React from 'react';
+import React, {createRef} from 'react';
 import {connect} from 'react-redux';
 import {resetCount} from '../../actions/common';
-import {createRef} from '../../stateProvider';
-import {List} from '../list/List';
+import {createStateRef} from '../../stateProvider';
+import {ListWithState} from '../list/List';
 
 export class App extends React.Component {
     constructor(props) {
         super(props);
 
-        this.list1 = createRef(); // ссылка на state компонента
-        this.list2 = createRef();
+        this.list1 = createStateRef(); // ссылка на state компонента
+        this.list2 = createStateRef();
+        this.onReset = this.onReset.bind(this);
+        this.onChangeList1 = this.onChangeList1.bind(this);
 
-        this.onClick = this.onClick.bind(this);
+        this.list1.subscribe(() => {
+            console.log('subscribe', this.list1.getState().status);
+        })
     }
 
     render() {
         return (
             <div>
-                {this.props.name} (count: {this.props.count}) <button onClick={this.onClick}>reset</button>
-                <List name={'LIST 1'} storeRef={this.list1} storeName={'list1'}/>{/* имя сторы для devTools */}
-                <List name={'LIST 2'} storeRef={this.list2}/>{/* проброс ссылки компоненту, который имеет внтуренний state */}
+                {this.props.name} (count: {this.props.count}) <button onClick={this.onReset}>reset</button>
+                <ListWithState
+                    name={'LIST 1'}
+                    storeRef={this.list1} // проброс ссылки компоненту, который имеет внтуренний state
+                    onChangeState={this.onChangeList1} // проборос колбека на изменение внутренного стейта
+                    storeName={'list1'} // имя сторы для devTools
+                />
+                <ListWithState
+                    name={'LIST 2'}
+                    storeRef={this.list2}
+                    status={'init2'}
+                />
             </div>
         );
     }
 
-    onClick() {
+    componentDidMount() {
+        console.log(this.list1.getState());
+        console.log(this.list2.getState());
+    }
+
+    onChangeList1() {
+        console.log('onChangeList1', this.list1.getState().status);
+    }
+
+    onReset() {
         console.log(this.list1.getState()); // получение внтуреннего state компонента
         console.log(this.list2.getState());
 
         this.list1.setState({ // изменение внтуреннего state компонента
-            status: 'init',
+            status: 'init1',
         });
 
         this.list2.setState({
-            status: 'init',
+            status: 'init2',
         });
 
         this.props.resetCount();
