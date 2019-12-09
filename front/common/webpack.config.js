@@ -84,7 +84,7 @@ module.exports = {
             hash: true,
             inject: false,
             filename: 'index.html',
-            template: './front/src/index.html'
+            template: './src/index.html'
         }),
         new CleanWebpackPlugin(['dist']),
     ],

@@ -20,6 +20,6 @@
     "webpack-cli": "3.1.0"
   },
   "scripts": {
-    "webpack": "node ./node_modules/.bin/webpack-cli --config ./front/webpack.config.js"
+    "webpack": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --watch"
   }
 }
