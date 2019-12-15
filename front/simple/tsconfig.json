@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist/",
+    "module": "esnext",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "es5",
+    "jsx": "react",
+    "rootDirs": [
+      "./src",
+      "generated/templates/views"
+    ]
+  },
+  "path": {
+    "*": ["src/*"],
+    "*.scss": ["*.scss"]
+  }
+}

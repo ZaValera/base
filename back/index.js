@@ -1,9 +1,18 @@
 const path = require('path');
 const express = require('express');
+const params = process.argv.slice(2);
+const data = {};
+
+for (const item of params) {
+    const [name, value] = item.split('=');
+    data[name.slice(2)] = value;
+}
+
+const front = data.front;
 
 const app = express();
-app.use('/dist', express.static(path.join(__dirname, '../front/react/dist')));
-app.use(require('./router'));
+app.use('/dist', express.static(path.join(__dirname, `../front/${front}/dist`)));
+app.use(require('./router')(front));
 
 const server = app.listen(3000, 'localhost', () => {
     const {address, port} = server.address();

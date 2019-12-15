@@ -1,8 +1,10 @@
 const path = require('path');
 const router = require('express').Router();
 
-router.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../front/react/dist/index.html'));
-});
+function getRouter(front) {
+    return router.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, `../front/${front}/dist/index.html`));
+    });
+}
 
-module.exports = router;
+module.exports = getRouter;
