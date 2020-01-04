@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declarationMap": true,
+    "rootDir": ".",
+    "composite": true,
+    "outDir": "./build",
+    "lib": ["esnext", "dom"]
+  },
+  "references": []
+}

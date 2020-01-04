@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./build",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "removeComments": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "target": "esnext",
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    }
+  },
+  "references": [
+    {"path": "../shared"}
+  ]
+}

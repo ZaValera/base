@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./build/",
+    "module": "esnext",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "es5",
+    "jsx": "react",
+    "rootDirs": [
+      "./src"
+    ]
+  },
+  "path": {
+    "*": ["src/*"],
+    "*.scss": ["*.scss"]
+  },
+  "references": [
+    {"path": "../common"}
+  ]
+}

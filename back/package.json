@@ -1,0 +1,14 @@
+{
+  "name": "base.js",
+  "version": "0.1.0",
+  "devDependencies": {
+    "@types/express": "^4.17.2",
+    "@types/node": "13.1.4",
+    "cookie-parser": "1.4.3",
+    "express": "4.16.3",
+    "typescript": "3.7.3"
+  },
+  "scripts": {
+    "watch": "node ./node_modules/.bin/tsc --build --watch"
+  }
+}

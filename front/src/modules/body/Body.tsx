@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Route} from 'react-router-dom';
 import * as styles from './body.scss';
-import {MainPage} from '../../pages/Main/MainPage';
+import {MainPage} from 'src/pages/Main/MainPage';
 
 export function Body() {
     return (
