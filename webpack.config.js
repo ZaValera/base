@@ -2,39 +2,36 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-console.log(path.resolve(__dirname, 'src'));
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = env => {
     const isDev = env && env.dev;
+    const mode = isDev ? 'development' : 'production';
+    const devtool = isDev ? 'inline-source-map' : 'source-map';
 
     const frontConfig = {
-        entry: './front/index.tsx',
-        output: {
-            filename: 'main.js',
-            path: path.resolve(__dirname, 'front/dist'),
-            publicPath: '/dist/',
-        },
-    };
-
-    const backConfig = {
-        entry: './back/index.ts',
+        mode,
+        devtool,
+        target: 'web',
+        entry: './front/src/index.tsx',
         output: {
             filename: 'index.js',
-            path: path.resolve(__dirname, 'back/dist'),
-            // publicPath: '/dist/',
+            path: path.resolve(__dirname, 'front/build'),
+            publicPath: '/build/',
         },
-    };
-
-    const commonConfig = {
-        mode: isDev ? 'development' : 'production',
-        devtool: isDev ? 'inline-source-map' : 'source-map',
         module: {
             rules: [
                 {
                     test: /\.tsx?$/,
-                    use: 'ts-loader',
                     exclude: /node_modules/,
+                    use: [
+                        {
+                            loader: 'ts-loader',
+                            options: {
+                                configFile: path.resolve(__dirname, 'front/tsconfig.json'),
+                            },
+                        },
+                    ],
                 },
                 {
                     test: /\.css$/,
@@ -69,11 +66,12 @@ module.exports = env => {
             ],
         },
         resolve: {
-            extensions: ['.tsx', '.ts', '.js'],
-            // modules: [path.resolve(__dirname, './src'), 'node_modules'],
+            extensions: ['.js', '.tsx', '.ts'],
+            modules: [path.resolve(__dirname, './front/src'), 'node_modules', path.resolve(__dirname, './shared')],
             alias: {
-                src: path.resolve(__dirname, 'src')
-            }
+                src: path.resolve(__dirname, './front/src'),
+                shared: path.resolve(__dirname, '../shared/build')
+            },
         },
         plugins: [
             new MiniCssExtractPlugin({
@@ -85,19 +83,51 @@ module.exports = env => {
                 hash: true,
                 inject: true,
                 filename: 'index.html',
-                template: path.resolve(__dirname, './front/index.html'),
+                template: path.resolve(__dirname, './front/src/index.html'),
             }),
         ],
     };
 
-    return [
-        {
-            ...commonConfig,
-            ...frontConfig,
+    const backConfig = {
+        mode,
+        devtool,
+        target: 'node',
+        entry: './back/src/index.ts',
+        output: {
+            filename: 'index.js',
+            path: path.resolve(__dirname, 'back/build'),
+            publicPath: '/build/',
         },
-        {
-            ...commonConfig,
-            ...backConfig,
-        }
-    ];
+        node: {
+            __dirname: false,
+        },
+        externals: [nodeExternals()],
+        module: {
+            rules: [
+                {
+                    test: /\.ts$/,
+                    exclude: /node_modules/,
+                    use: [
+                        {
+                            loader: 'ts-loader',
+                            options: {
+                                configFile: path.resolve(__dirname, 'back/tsconfig.json'),
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        resolve: {
+            extensions: ['.ts', '.js'],
+            alias: {
+                shared: path.resolve(__dirname, '../shared/build')
+            },
+        },
+        plugins: [
+            new CleanWebpackPlugin(),
+        ],
+    };
+
+    return [frontConfig, backConfig];
 };

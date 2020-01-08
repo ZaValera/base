@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as styles from './mainPage.scss';
-import {log} from 'shared/src/utils';
-import {SomeModule} from 'shared/src/modules/someModule/SomeModule';
+import {log} from '../../../../shared/src/utils';
+import {SomeModule} from '../../../../shared/src/modules/someModule/SomeModule';
 
 
 export function MainPage() {
