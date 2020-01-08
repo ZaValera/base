@@ -1,0 +1,31 @@
+{
+  "name": "base.js",
+  "version": "0.1.0",
+  "devDependencies": {
+    "@types/lodash": "4.14.149",
+    "@types/react": "16.9.16",
+    "@types/react-dom": "16.9.4",
+    "@types/react-router-dom": "5.1.3",
+    "clean-webpack-plugin": "3.0.0",
+    "css-loader": "3.3.2",
+    "html-webpack-plugin": "3.2.0",
+    "mini-css-extract-plugin": "0.8.0",
+    "sass": "1.23.7",
+    "sass-loader": "8.0.0",
+    "ts-loader": "6.2.1",
+    "typescript": "3.7.3",
+    "webpack": "4.41.2",
+    "webpack-cli": "3.3.10"
+  },
+  "dependencies": {
+    "lodash": "4.17.15",
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
+    "react-router-dom": "5.1.2",
+    "reset-css": "5.0.1"
+  },
+  "scripts": {
+    "webpack": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --watch --env.dev",
+    "build": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js"
+  }
+}

@@ -1,0 +1,1 @@
+export {SomeModule} from './SomeModule';
