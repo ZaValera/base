@@ -2,8 +2,8 @@ import path from 'path';
 import express from 'express';
 import {AddressInfo} from 'net';
 import {router} from './router';
-import {log} from '../../common/build/src/utils';
-import {SomeModule} from '../../common/build/src/modules/someModule/SomeModule';
+import {log} from '../../shared/src/utils';
+import {SomeModule} from '../../shared/src/modules/someModule';
 
 const app = express();
 

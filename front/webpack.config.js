@@ -13,7 +13,7 @@ module.exports = env => {
         devtool: isDev ? 'inline-source-map' : 'source-map',
         entry: './src/index.tsx',
         output: {
-            filename: 'main.js',
+            filename: 'index.js',
             path: path.resolve(__dirname, 'build'),
             publicPath: '/build/',
         },
@@ -57,11 +57,11 @@ module.exports = env => {
             ],
         },
         resolve: {
-            extensions: ['.tsx', '.ts', '.js'],
+            extensions: ['.js', '.tsx', '.ts'],
             // modules: [path.resolve(__dirname, './src'), 'node_modules'],
             alias: {
                 src: path.resolve(__dirname, 'src'),
-                common: path.resolve(__dirname, '../common/build')
+                shared: path.resolve(__dirname, '../shared')
             }
         },
         plugins: [
