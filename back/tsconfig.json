@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "baseUrl": "..",
+    "module": "esnext",
     "noImplicitAny": true,
-    "esModuleInterop": true,
     "removeComments": true,
-    "moduleResolution": "node",
     "sourceMap": true,
-    "target": "esnext"
-  }
+    "target": "esnext",
+    "downlevelIteration": true,
+    "esModuleInterop": true
+  },
+  "paths": {
+    "shared/*": ["../shared"]
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
