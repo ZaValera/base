@@ -7,13 +7,17 @@
     "sourceMap": true,
     "downlevelIteration": true,
     "target": "es5",
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "jsx": "react"
+    "jsx": "react",
+    "paths": {
+      "front/*": ["./front/src/*"],
+      "back/*": ["./back/src/*"],
+      "shared/*": ["./shared/*"]
+    }
   },
   "exclude": [
     "node_modules",
-    "**/node_modules",
-    "old",
-    "shared"
+    "old"
   ]
 }

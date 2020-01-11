@@ -14,11 +14,7 @@ app.use(router);
 const server = app.listen(3000, 'localhost', () => {
     const {address, port} = server.address() as AddressInfo;
 
-    log(`Server listening at ${address}:${port}`);
+    console.log(`Server listening at ${address}:${port}`);
 });
 
 server.timeout = 0;
-
-const a = new SomeModule();
-
-a.log();

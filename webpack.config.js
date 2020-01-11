@@ -69,9 +69,8 @@ module.exports = env => {
             extensions: ['.js', '.tsx', '.ts'],
             // modules: ['front/node_modules'],
             alias: {
-                src: path.resolve(__dirname, './front/src'),
-                // shared: path.resolve(__dirname, '../../shared'),
-                shared: '../../shared',
+                front: path.resolve(__dirname, './front/src'),
+                shared: path.resolve(__dirname, './shared'),
             },
         },
         plugins: [
@@ -125,7 +124,8 @@ module.exports = env => {
             extensions: ['.ts', '.js'],
             // modules: ['node_modules'],
             alias: {
-                shared: '../../shared',
+                back: path.resolve(__dirname, './back/src'),
+                shared: path.resolve(__dirname, './shared'),
             },
         },
         plugins: [
