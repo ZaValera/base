@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "target": "es5",
+    "jsx": "react",
+    "paths": {
+      "src/*": ["./front/src/*"]
+    }
+  }
+}

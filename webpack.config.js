@@ -28,7 +28,7 @@ module.exports = env => {
                         {
                             loader: 'ts-loader',
                             options: {
-                                configFile: path.resolve(__dirname, 'tsconfig.json'),
+                                configFile: path.resolve(__dirname, 'front/tsconfig.json'),
                             },
                         },
                     ],
@@ -69,7 +69,7 @@ module.exports = env => {
             extensions: ['.js', '.tsx', '.ts'],
             // modules: ['front/node_modules'],
             alias: {
-                front: path.resolve(__dirname, './front/src'),
+                src: path.resolve(__dirname, './front/src'),
                 shared: path.resolve(__dirname, './shared'),
             },
         },
@@ -113,7 +113,7 @@ module.exports = env => {
                         {
                             loader: 'ts-loader',
                             options: {
-                                configFile: path.resolve(__dirname, 'tsconfig.json'),
+                                configFile: path.resolve(__dirname, 'back/tsconfig.json'),
                             },
                         },
                     ],
@@ -124,7 +124,7 @@ module.exports = env => {
             extensions: ['.ts', '.js'],
             // modules: ['node_modules'],
             alias: {
-                back: path.resolve(__dirname, './back/src'),
+                src: path.resolve(__dirname, './back/src'),
                 shared: path.resolve(__dirname, './shared'),
             },
         },

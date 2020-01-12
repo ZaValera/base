@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as styles from './layout.scss';
-import {Body} from 'front/modules/body/Body';
-import {Head} from 'front/modules/head/Head';
+import {Body} from 'src/modules/body/Body';
+import {Head} from 'src/modules/head/Head';
 
 
 export function Layout() {

@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "target": "esnext",
+    "esModuleInterop": true,
+    "paths": {
+      "src/*": ["./back/src/*"]
+    }
+  }
+}

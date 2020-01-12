@@ -6,13 +6,8 @@
     "removeComments": true,
     "sourceMap": true,
     "downlevelIteration": true,
-    "target": "es5",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "jsx": "react",
     "paths": {
-      "front/*": ["./front/src/*"],
-      "back/*": ["./back/src/*"],
       "shared/*": ["./shared/*"]
     }
   },

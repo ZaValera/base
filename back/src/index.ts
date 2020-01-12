@@ -5,6 +5,7 @@ import {router} from './router';
 import {log} from 'shared/src/utils';
 import {SomeModule} from 'shared/src/modules/someModule';
 
+export const b = 123;
 
 const app = express();
 

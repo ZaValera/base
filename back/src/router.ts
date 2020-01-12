@@ -1,6 +1,8 @@
 import path from 'path';
 import express from  'express';
 
+import {b} from 'src/index';
+
 export const router = express.Router();
 
 router.get('*', (req, res) => {

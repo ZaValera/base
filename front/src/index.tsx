@@ -1,5 +1,5 @@
 import 'reset-css';
-import 'front/css/main.css';
+import 'src/css/main.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {BrowserRouter as Router} from 'react-router-dom';
