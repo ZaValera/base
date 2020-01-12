@@ -101,9 +101,7 @@ module.exports = env => {
         node: {
             __dirname: false,
         },
-        externals: [nodeExternals({
-            modulesDir: path.resolve(__dirname, 'back/node_modules'),
-        })],
+        externals: [nodeExternals()],
         module: {
             rules: [
                 {
