@@ -4,6 +4,15 @@ PACKAGES = packages-cache node_modules
 install:
 	$(YARN) install --offline
 
+add:
+	$(YARN) add $(PACKAGE)
+
+remove:
+	$(YARN) remove $(PACKAGE)
+
+upgrade:
+	$(YARN) upgrade $(PACKAGE)
+
 build:
 	make install
 	npm run build
