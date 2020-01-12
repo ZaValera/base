@@ -30,7 +30,8 @@
     "express": "4.16.3"
   },
   "scripts": {
-    "webpack": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --watch --env.dev",
+    "watch": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --watch --env.dev",
+    "dev": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --env.dev",
     "build": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js",
     "server": "node ./back/build/index.js"
   }
