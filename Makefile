@@ -29,3 +29,6 @@ update:
 	rm -rf $(PACKAGES)
 	$(YARN) cache clean
 	$(YARN) install
+
+server:
+	npm run server

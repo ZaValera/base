@@ -9,6 +9,23 @@ module.exports = env => {
     const mode = isDev ? 'development' : 'production';
     const devtool = isDev ? 'inline-source-map' : 'source-map';
 
+    function addCache(config) {
+        if (!isDev) {
+            return config;
+        }
+
+        for (const item of config.module.rules) {
+            item.use.unshift({
+                loader:'cache-loader',
+                options: {
+                    cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
+                },
+            });
+        }
+
+        return config;
+    }
+
     const frontConfig = {
         mode,
         devtool,
@@ -48,6 +65,7 @@ module.exports = env => {
                         {
                             loader: 'css-loader',
                             options: {
+                                sourceMap: isDev,
                                 localsConvention: 'camelCase',
                                 importLoaders: 1,
                                 modules: {
@@ -59,6 +77,15 @@ module.exports = env => {
                             loader: 'sass-loader',
                             options: {
                                 implementation: require('sass'),
+                            },
+                        },
+                        {
+                            loader: 'sass-resources-loader',
+                            options: {
+                                resources: [
+                                    path.resolve(__dirname, 'front/src/styles/vars.scss'),
+                                    path.resolve(__dirname, 'front/src/styles/mixins.scss'),
+                                ],
                             },
                         },
                     ],
@@ -131,5 +158,8 @@ module.exports = env => {
         ],
     };
 
-    return [frontConfig, backConfig];
+    return [
+        addCache(frontConfig),
+        addCache(backConfig),
+    ];
 };
