@@ -15,14 +15,14 @@ module.exports = env => {
             return config;
         }
 
-        /*for (const item of config.module.rules) {
+        for (const item of config.module.rules) {
             item.use.unshift({
                 loader:'cache-loader',
                 options: {
                     cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
                 },
             });
-        }*/
+        }
 
         return config;
     }
@@ -74,13 +74,6 @@ module.exports = env => {
                     ]
                 },
                 {
-                    test: /\.css$/,
-                    use: [
-                        MiniCssExtractPlugin.loader,
-                        'css-loader',
-                    ],
-                },
-                {
                     test: /\.s[ac]ss$/i,
                     exclude: /node_modules/,
                     use: [
@@ -128,13 +121,14 @@ module.exports = env => {
         },
         resolve: {
             extensions: ['.js', '.tsx', '.ts'],
-            modules: [path.resolve(__dirname, 'node_modules')],
+            modules: [
+                path.resolve(__dirname, 'node_modules'),
+            ],
             alias: {
-                src: path.resolve(__dirname, './front/src'),
-                shared: path.resolve(__dirname, './shared'),
-                './assets': path.resolve(__dirname, './front/src/assets'),
-                // './images': path.resolve(__dirname, './front/src/assets/images'),
-                // fonts: path.resolve(__dirname, './front/src/assets/fonts'),
+                src: path.resolve(__dirname, 'front/src'),
+                shared: path.resolve(__dirname, 'shared'),
+                assets: path.resolve(__dirname, 'front/assets'), // для import в ts
+                './front': path.resolve(__dirname, 'front'), // для url() в scss
             },
         },
         plugins: [
