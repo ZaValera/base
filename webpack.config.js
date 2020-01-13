@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const nodeExternals = require('webpack-node-externals');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = env => {
     const isDev = env && env.dev;
@@ -101,11 +102,12 @@ module.exports = env => {
             },
         },
         plugins: [
+            new CleanWebpackPlugin(),
+            new FriendlyErrorsWebpackPlugin(),
             new MiniCssExtractPlugin({
                 filename: 'css/[name].css',
                 chunkFilename: 'css/[id].css',
             }),
-            new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 hash: true,
                 inject: true,
@@ -155,6 +157,7 @@ module.exports = env => {
         },
         plugins: [
             new CleanWebpackPlugin(),
+            new FriendlyErrorsWebpackPlugin(),
         ],
     };
 
