@@ -1,17 +1,20 @@
 YARN = ./yarn/bin/yarn
-PACKAGES = packages-cache node_modules
+PACKAGES = packages-cache node_modules webpack_cache
 
 install:
 	$(YARN) install --offline
 
 add:
-	$(YARN) add $(PACKAGE)
+	$(YARN) add $(filter-out $@,$(MAKECMDGOALS))
+
+add-dev:
+	$(YARN) add $(filter-out $@,$(MAKECMDGOALS)) --dev
 
 remove:
-	$(YARN) remove $(PACKAGE)
+	$(YARN) remove $(filter-out $@,$(MAKECMDGOALS))
 
 upgrade:
-	$(YARN) upgrade $(PACKAGE)
+	$(YARN) upgrade $(filter-out $@,$(MAKECMDGOALS))
 
 build:
 	make install

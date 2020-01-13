@@ -15,14 +15,14 @@ module.exports = env => {
             return config;
         }
 
-        for (const item of config.module.rules) {
+        /*for (const item of config.module.rules) {
             item.use.unshift({
                 loader:'cache-loader',
                 options: {
                     cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
                 },
             });
-        }
+        }*/
 
         return config;
     }
@@ -52,6 +52,28 @@ module.exports = env => {
                     ],
                 },
                 {
+                    test: /\.(png|svg|jpg|gif)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: 'images/[name]_[hash].[ext]',
+                            }
+                        }
+                    ]
+                },
+                {
+                    test: /\.(eot|ttf|woff)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: 'fonts/[name]_[hash].[ext]',
+                            }
+                        }
+                    ]
+                },
+                {
                     test: /\.css$/,
                     use: [
                         MiniCssExtractPlugin.loader,
@@ -66,18 +88,29 @@ module.exports = env => {
                         {
                             loader: 'css-loader',
                             options: {
+                                url: true,
                                 sourceMap: isDev,
                                 localsConvention: 'camelCase',
-                                importLoaders: 1,
+                                importLoaders: 3,
                                 modules: {
                                     localIdentName: isDev ? '[name]--[local]--[hash:base64:6]' : '[hash:base64:6]',
                                 },
                             },
                         },
                         {
+                            loader: 'resolve-url-loader',
+                            options: {
+                                keepQuery: true,
+                                // root: path.resolve(__dirname, 'front/src/assets/'),
+                            }
+                        },
+                        {
                             loader: 'sass-loader',
                             options: {
                                 implementation: require('sass'),
+                                sassOptions: {
+                                    includePaths: ['node_modules'],
+                                },
                             },
                         },
                         {
@@ -95,10 +128,13 @@ module.exports = env => {
         },
         resolve: {
             extensions: ['.js', '.tsx', '.ts'],
-            // modules: ['front/node_modules'],
+            modules: [path.resolve(__dirname, 'node_modules')],
             alias: {
                 src: path.resolve(__dirname, './front/src'),
                 shared: path.resolve(__dirname, './shared'),
+                './assets': path.resolve(__dirname, './front/src/assets'),
+                // './images': path.resolve(__dirname, './front/src/assets/images'),
+                // fonts: path.resolve(__dirname, './front/src/assets/fonts'),
             },
         },
         plugins: [
