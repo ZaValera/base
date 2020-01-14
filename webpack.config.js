@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const nodeExternals = require('webpack-node-externals');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
@@ -9,22 +8,18 @@ module.exports = env => {
     const isDev = env && env.dev;
     const mode = isDev ? 'development' : 'production';
     const devtool = isDev ? 'inline-source-map' : 'source-map';
-
-    function addCache(config) {
+    
+    function getCacheLoader() {
         if (!isDev) {
-            return config;
+            return [];
         }
 
-        for (const item of config.module.rules) {
-            item.use.unshift({
-                loader:'cache-loader',
-                options: {
-                    cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
-                },
-            });
-        }
-
-        return config;
+        return [{
+            loader:'cache-loader',
+            options: {
+                cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
+            },
+        }];
     }
 
     const frontConfig = {
@@ -43,6 +38,7 @@ module.exports = env => {
                     test: /\.tsx?$/,
                     exclude: /node_modules/,
                     use: [
+                        ...getCacheLoader(),
                         {
                             loader: 'ts-loader',
                             options: {
@@ -77,11 +73,11 @@ module.exports = env => {
                     test: /\.s[ac]ss$/i,
                     exclude: /node_modules/,
                     use: [
+                        ...getCacheLoader(),
                         MiniCssExtractPlugin.loader,
                         {
                             loader: 'css-loader',
                             options: {
-                                url: true,
                                 sourceMap: isDev,
                                 localsConvention: 'camelCase',
                                 importLoaders: 3,
@@ -132,7 +128,6 @@ module.exports = env => {
             },
         },
         plugins: [
-            new CleanWebpackPlugin(),
             new FriendlyErrorsWebpackPlugin(),
             new MiniCssExtractPlugin({
                 filename: 'css/[name].css',
@@ -167,6 +162,7 @@ module.exports = env => {
                     test: /\.ts$/,
                     exclude: /node_modules/,
                     use: [
+                        ...getCacheLoader(),
                         {
                             loader: 'ts-loader',
                             options: {
@@ -186,13 +182,12 @@ module.exports = env => {
             },
         },
         plugins: [
-            new CleanWebpackPlugin(),
             new FriendlyErrorsWebpackPlugin(),
         ],
     };
 
     return [
-        addCache(frontConfig),
-        addCache(backConfig),
+        frontConfig,
+        backConfig,
     ];
 };

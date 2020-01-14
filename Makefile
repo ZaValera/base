@@ -28,6 +28,9 @@ watch:
 	make install
 	npm run watch
 
+clean:
+	rm -rf webpack_cache front/build back/build
+
 update:
 	rm -rf $(PACKAGES)
 	$(YARN) cache clean

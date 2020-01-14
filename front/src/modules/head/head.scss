@@ -1,10 +1,26 @@
 .head {
   width: 100%;
   height: 60px;
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: $orange;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-.title {
-  @include text-overflowed(30px);
+.icon {
+  height: 60px;
+  padding: 0 20px;
+}
+
+.menu {
+  padding: 0 20px;
+  min-width: 168px;
+  box-sizing: border-box;
+  font-size: 24px;
+}
+
+.text {
+  @include text-overflowed();
+  line-height: 20px;
 }
