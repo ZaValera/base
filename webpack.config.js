@@ -1,44 +1,82 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-console.log(path.resolve(__dirname, 'src'));
+const nodeExternals = require('webpack-node-externals');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = env => {
     const isDev = env && env.dev;
+    const mode = isDev ? 'development' : 'production';
+    const devtool = isDev ? 'inline-source-map' : 'source-map';
+    
+    function getCommonLoaders() {
+        const loaders = [];
+
+        if (isDev) {
+            loaders.push({
+                loader:'cache-loader',
+                options: {
+                    cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
+                },
+            });
+        }
+
+        return loaders;
+    }
 
     const frontConfig = {
-        entry: './front/index.tsx',
+        mode,
+        devtool,
+        target: 'web',
+        entry: './front/src/index.tsx',
         output: {
-            filename: 'main.js',
-            path: path.resolve(__dirname, 'front/dist'),
-            publicPath: '/dist/',
+            filename: '[name].[contenthash].js',
+            chunkFilename: '[name].[chunkhash].js',
+            path: path.resolve(__dirname, 'front/build'),
+            publicPath: '/build/',
         },
-    };
-
-    const backConfig = {
-        entry: './back/index.ts',
-        output: {
-            filename: 'index.js',
-            path: path.resolve(__dirname, 'back/dist'),
-            // publicPath: '/dist/',
-        },
-    };
-
-    const commonConfig = {
-        mode: isDev ? 'development' : 'production',
-        devtool: isDev ? 'inline-source-map' : 'source-map',
         module: {
             rules: [
                 {
                     test: /\.tsx?$/,
-                    use: 'ts-loader',
                     exclude: /node_modules/,
+                    use: [
+                        ...getCommonLoaders(),
+                        {
+                            loader: 'ts-loader',
+                            options: {
+                                configFile: path.resolve(__dirname, 'front/tsconfig.json'),
+                                experimentalWatchApi: true,
+                            },
+                        },
+                    ],
+                },
+                {
+                    test: /\.(png|svg|jpg|gif)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: 'images/[name]_[hash].[ext]',
+                            }
+                        }
+                    ]
+                },
+                {
+                    test: /\.(eot|ttf|woff)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: 'fonts/[name]_[hash].[ext]',
+                            }
+                        }
+                    ]
                 },
                 {
                     test: /\.css$/,
                     use: [
+                        ...getCommonLoaders(),
                         MiniCssExtractPlugin.loader,
                         'css-loader',
                     ],
@@ -47,21 +85,41 @@ module.exports = env => {
                     test: /\.s[ac]ss$/i,
                     exclude: /node_modules/,
                     use: [
+                        ...getCommonLoaders(),
                         MiniCssExtractPlugin.loader,
                         {
                             loader: 'css-loader',
                             options: {
+                                sourceMap: isDev,
                                 localsConvention: 'camelCase',
-                                importLoaders: 1,
+                                importLoaders: 3,
                                 modules: {
                                     localIdentName: isDev ? '[name]--[local]--[hash:base64:6]' : '[hash:base64:6]',
                                 },
                             },
                         },
                         {
+                            loader: 'resolve-url-loader',
+                            options: {
+                                keepQuery: true,
+                            }
+                        },
+                        {
                             loader: 'sass-loader',
                             options: {
                                 implementation: require('sass'),
+                                sassOptions: {
+                                    includePaths: ['node_modules'],
+                                },
+                            },
+                        },
+                        {
+                            loader: 'sass-resources-loader',
+                            options: {
+                                resources: [
+                                    path.resolve(__dirname, 'front/src/styles/vars.scss'),
+                                    path.resolve(__dirname, 'front/src/styles/mixins.scss'),
+                                ],
                             },
                         },
                     ],
@@ -69,35 +127,114 @@ module.exports = env => {
             ],
         },
         resolve: {
-            extensions: ['.tsx', '.ts', '.js'],
-            // modules: [path.resolve(__dirname, './src'), 'node_modules'],
+            extensions: ['.js', '.tsx', '.ts'],
+            modules: [
+                path.resolve(__dirname, 'node_modules'),
+            ],
             alias: {
-                src: path.resolve(__dirname, 'src')
-            }
+                src: path.resolve(__dirname, 'front/src'),
+                shared: path.resolve(__dirname, 'shared'),
+                assets: path.resolve(__dirname, 'front/assets'), // для import в ts
+                './front': path.resolve(__dirname, 'front'), // для url() в scss
+            },
         },
         plugins: [
+            new FriendlyErrorsWebpackPlugin(),
             new MiniCssExtractPlugin({
                 filename: 'css/[name].css',
                 chunkFilename: 'css/[id].css',
             }),
-            new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 hash: true,
                 inject: true,
                 filename: 'index.html',
-                template: path.resolve(__dirname, './front/index.html'),
+                template: path.resolve(__dirname, './front/src/index.html'),
             }),
+        ],
+        optimization: {
+            runtimeChunk: 'single',
+            splitChunks: {
+                cacheGroups: {
+                    default: {
+                        reuseExistingChunk: true,
+                    },
+                    index: {
+                        reuseExistingChunk: true,
+                        test: /front\/src\/components.*\.tsx?$/,
+                        name: 'components',
+                        chunks: 'all',
+                        enforce: true,
+                    },
+                    // Возможно в этом чанке нет смысла
+                    styles: {
+                        name: 'styles',
+                        test: /\.scss$/,
+                        chunks: 'all',
+                        enforce: true,
+                    },
+                    node_modules: {
+                        test: /[\\/]node_modules[\\/]/,
+                        chunks: 'all',
+                        minSize: 50000, // Все модули меньше 50 Кб будут попадать в main чанк
+                        name(module) {
+                            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+                            return `npm/${packageName.replace('@', '')}`;
+                        },
+                        reuseExistingChunk: true,
+                        enforce: true,
+                    },
+                }
+            },
+        },
+    };
+
+    const backConfig = {
+        mode,
+        devtool,
+        target: 'node',
+        entry: './back/src/index.ts',
+        output: {
+            filename: 'index.js',
+            path: path.resolve(__dirname, 'back/build'),
+            publicPath: '/build/',
+        },
+        node: {
+            __dirname: false,
+        },
+        externals: [nodeExternals()],
+        module: {
+            rules: [
+                {
+                    test: /\.ts$/,
+                    exclude: /node_modules/,
+                    use: [
+                        ...getCommonLoaders(),
+                        {
+                            loader: 'ts-loader',
+                            options: {
+                                configFile: path.resolve(__dirname, 'back/tsconfig.json'),
+                                experimentalWatchApi: true,
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        resolve: {
+            extensions: ['.ts', '.js'],
+            // modules: ['node_modules'],
+            alias: {
+                src: path.resolve(__dirname, './back/src'),
+                shared: path.resolve(__dirname, './shared'),
+            },
+        },
+        plugins: [
+            new FriendlyErrorsWebpackPlugin(),
         ],
     };
 
     return [
-        {
-            ...commonConfig,
-            ...frontConfig,
-        },
-        {
-            ...commonConfig,
-            ...backConfig,
-        }
+        frontConfig,
+        backConfig,
     ];
 };

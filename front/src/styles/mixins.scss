@@ -1,0 +1,11 @@
+@mixin text-overflow {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin text-overflowed($max-width: 100%) {
+  @include text-overflow;
+  max-width: $max-width;
+}

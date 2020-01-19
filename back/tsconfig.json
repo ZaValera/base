@@ -1,21 +1,10 @@
 {
+  "extends": "../tsconfig",
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./build",
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "esModuleInterop": true,
-    "removeComments": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
     "target": "esnext",
+    "esModuleInterop": true,
     "paths": {
-      "*": [
-        "node_modules/*"
-      ]
+      "src/*": ["./back/src/*"]
     }
-  },
-  "references": [
-    {"path": "../shared"}
-  ]
+  }
 }

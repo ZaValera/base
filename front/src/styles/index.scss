@@ -1,0 +1,13 @@
+@import 'reset-css/sass/reset';
+@import './fonts.scss';
+
+:global {
+  html, body {
+    height: 100%;
+  }
+
+  #root {
+    font-family: 'Open Sans',sans-serif;
+    height: 100%;
+  }
+}
