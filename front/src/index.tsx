@@ -10,7 +10,6 @@ import {SomeModule} from 'shared/src/modules/someModule';
 
 console.log(_.uniqueId('init'));
 
-
 ReactDOM.render(
     <Router>
         <Layout/>

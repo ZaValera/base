@@ -9,15 +9,8 @@ module.exports = env => {
     const mode = isDev ? 'development' : 'production';
     const devtool = isDev ? 'inline-source-map' : 'source-map';
     
-    function getCacheLoader() {
-        const loaders = [
-            /*{
-                loader: 'thread-loader',
-                options: {
-                    workers: 1,
-                },
-            }*/
-        ];
+    function getCommonLoaders() {
+        const loaders = [];
 
         if (isDev) {
             loaders.push({
@@ -48,11 +41,12 @@ module.exports = env => {
                     test: /\.tsx?$/,
                     exclude: /node_modules/,
                     use: [
-                        ...getCacheLoader(),
+                        ...getCommonLoaders(),
                         {
                             loader: 'ts-loader',
                             options: {
                                 configFile: path.resolve(__dirname, 'front/tsconfig.json'),
+                                experimentalWatchApi: true,
                             },
                         },
                     ],
@@ -82,7 +76,7 @@ module.exports = env => {
                 {
                     test: /\.css$/,
                     use: [
-                        ...getCacheLoader(),
+                        ...getCommonLoaders(),
                         MiniCssExtractPlugin.loader,
                         'css-loader',
                     ],
@@ -91,7 +85,7 @@ module.exports = env => {
                     test: /\.s[ac]ss$/i,
                     exclude: /node_modules/,
                     use: [
-                        ...getCacheLoader(),
+                        ...getCommonLoaders(),
                         MiniCssExtractPlugin.loader,
                         {
                             loader: 'css-loader',
@@ -108,7 +102,6 @@ module.exports = env => {
                             loader: 'resolve-url-loader',
                             options: {
                                 keepQuery: true,
-                                // root: path.resolve(__dirname, 'front/src/assets/'),
                             }
                         },
                         {
@@ -215,11 +208,12 @@ module.exports = env => {
                     test: /\.ts$/,
                     exclude: /node_modules/,
                     use: [
-                        ...getCacheLoader(),
+                        ...getCommonLoaders(),
                         {
                             loader: 'ts-loader',
                             options: {
                                 configFile: path.resolve(__dirname, 'back/tsconfig.json'),
+                                experimentalWatchApi: true,
                             },
                         },
                     ],

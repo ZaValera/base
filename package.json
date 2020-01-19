@@ -34,6 +34,9 @@
     "react-router-dom": "5.1.2",
     "reset-css": "5.0.1"
   },
+  "resolutions": {
+    "@types/react": "16.9.16"
+  },
   "scripts": {
     "watch": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --watch --env.dev",
     "dev": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --env.dev",
