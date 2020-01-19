@@ -10,16 +10,25 @@ module.exports = env => {
     const devtool = isDev ? 'inline-source-map' : 'source-map';
     
     function getCacheLoader() {
-        if (!isDev) {
-            return [];
+        const loaders = [
+            /*{
+                loader: 'thread-loader',
+                options: {
+                    workers: 1,
+                },
+            }*/
+        ];
+
+        if (isDev) {
+            loaders.push({
+                loader:'cache-loader',
+                options: {
+                    cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
+                },
+            });
         }
 
-        return [{
-            loader:'cache-loader',
-            options: {
-                cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
-            },
-        }];
+        return loaders;
     }
 
     const frontConfig = {
@@ -28,7 +37,8 @@ module.exports = env => {
         target: 'web',
         entry: './front/src/index.tsx',
         output: {
-            filename: 'index.js',
+            filename: '[name].[contenthash].js',
+            chunkFilename: '[name].[chunkhash].js',
             path: path.resolve(__dirname, 'front/build'),
             publicPath: '/build/',
         },
@@ -68,6 +78,14 @@ module.exports = env => {
                             }
                         }
                     ]
+                },
+                {
+                    test: /\.css$/,
+                    use: [
+                        ...getCacheLoader(),
+                        MiniCssExtractPlugin.loader,
+                        'css-loader',
+                    ],
                 },
                 {
                     test: /\.s[ac]ss$/i,
@@ -140,6 +158,41 @@ module.exports = env => {
                 template: path.resolve(__dirname, './front/src/index.html'),
             }),
         ],
+        optimization: {
+            runtimeChunk: 'single',
+            splitChunks: {
+                cacheGroups: {
+                    default: {
+                        reuseExistingChunk: true,
+                    },
+                    index: {
+                        reuseExistingChunk: true,
+                        test: /front\/src\/components.*\.tsx?$/,
+                        name: 'components',
+                        chunks: 'all',
+                        enforce: true,
+                    },
+                    // Возможно в этом чанке нет смысла
+                    styles: {
+                        name: 'styles',
+                        test: /\.scss$/,
+                        chunks: 'all',
+                        enforce: true,
+                    },
+                    node_modules: {
+                        test: /[\\/]node_modules[\\/]/,
+                        chunks: 'all',
+                        minSize: 50000, // Все модули меньше 50 Кб будут попадать в main чанк
+                        name(module) {
+                            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+                            return `npm/${packageName.replace('@', '')}`;
+                        },
+                        reuseExistingChunk: true,
+                        enforce: true,
+                    },
+                }
+            },
+        },
     };
 
     const backConfig = {
