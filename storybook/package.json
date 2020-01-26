@@ -10,8 +10,10 @@
     "react": "16.12.0",
     "react-dom": "16.12.0"
   },
-  "resolutions": {},
+  "resolutions": {
+    "@types/react": "16.9.16"
+  },
   "scripts": {
-    "storybook": "start-storybook"
+    "storybook": "start-storybook -p 6006"
   }
 }

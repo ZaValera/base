@@ -6,6 +6,7 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = env => {
     const isDev = env && env.dev;
+    const dirname = env && env.dirname || __dirname;
     const mode = isDev ? 'development' : 'production';
     const devtool = isDev ? 'inline-source-map' : 'source-map';
     
@@ -16,7 +17,7 @@ module.exports = env => {
             loaders.push({
                 loader:'cache-loader',
                 options: {
-                    cacheDirectory: path.resolve(__dirname, 'webpack_cache'),
+                    cacheDirectory: path.resolve(dirname, 'webpack_cache'),
                 },
             });
         }
@@ -32,7 +33,7 @@ module.exports = env => {
         output: {
             filename: '[name].[contenthash].js',
             chunkFilename: '[name].[chunkhash].js',
-            path: path.resolve(__dirname, 'front/build'),
+            path: path.resolve(dirname, 'front/build'),
             publicPath: '/build/',
         },
         module: {
@@ -45,7 +46,7 @@ module.exports = env => {
                         {
                             loader: 'ts-loader',
                             options: {
-                                configFile: path.resolve(__dirname, 'front/tsconfig.json'),
+                                configFile: path.resolve(dirname, 'front/tsconfig.json'),
                                 experimentalWatchApi: true,
                             },
                         },
@@ -117,8 +118,8 @@ module.exports = env => {
                             loader: 'sass-resources-loader',
                             options: {
                                 resources: [
-                                    path.resolve(__dirname, 'front/src/styles/vars.scss'),
-                                    path.resolve(__dirname, 'front/src/styles/mixins.scss'),
+                                    path.resolve(dirname, 'front/src/styles/vars.scss'),
+                                    path.resolve(dirname, 'front/src/styles/mixins.scss'),
                                 ],
                             },
                         },
@@ -129,13 +130,13 @@ module.exports = env => {
         resolve: {
             extensions: ['.js', '.tsx', '.ts'],
             modules: [
-                path.resolve(__dirname, 'node_modules'),
+                path.resolve(dirname, 'node_modules'),
             ],
             alias: {
-                src: path.resolve(__dirname, 'front/src'),
-                shared: path.resolve(__dirname, 'shared'),
-                assets: path.resolve(__dirname, 'front/assets'), // для import в ts
-                './front': path.resolve(__dirname, 'front'), // для url() в scss
+                src: path.resolve(dirname, 'front/src'),
+                shared: path.resolve(dirname, 'shared'),
+                assets: path.resolve(dirname, 'front/assets'), // для import в ts
+                './front': path.resolve(dirname, 'front'), // для url() в scss
             },
         },
         plugins: [
@@ -148,7 +149,7 @@ module.exports = env => {
                 hash: true,
                 inject: true,
                 filename: 'index.html',
-                template: path.resolve(__dirname, './front/src/index.html'),
+                template: path.resolve(dirname, './front/src/index.html'),
             }),
         ],
         optimization: {
@@ -195,7 +196,7 @@ module.exports = env => {
         entry: './back/src/index.ts',
         output: {
             filename: 'index.js',
-            path: path.resolve(__dirname, 'back/build'),
+            path: path.resolve(dirname, 'back/build'),
             publicPath: '/build/',
         },
         node: {
@@ -212,7 +213,7 @@ module.exports = env => {
                         {
                             loader: 'ts-loader',
                             options: {
-                                configFile: path.resolve(__dirname, 'back/tsconfig.json'),
+                                configFile: path.resolve(dirname, 'back/tsconfig.json'),
                                 experimentalWatchApi: true,
                             },
                         },
@@ -224,8 +225,8 @@ module.exports = env => {
             extensions: ['.ts', '.js'],
             // modules: ['node_modules'],
             alias: {
-                src: path.resolve(__dirname, './back/src'),
-                shared: path.resolve(__dirname, './shared'),
+                src: path.resolve(dirname, './back/src'),
+                shared: path.resolve(dirname, './shared'),
             },
         },
         plugins: [

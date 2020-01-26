@@ -1,26 +1,39 @@
 const webpackConfig = require('../../webpack.config');
+const path = require('path');
 
 module.exports = {
-    stories: ['../stories/*.[tj]s'],
+    stories: ['../stories/*.[tj]sx'],
     webpackFinal: (config) => {
-
-        return config;
-        /*const mainConfig = webpackConfig({dev: false})[0];
+        const mainConfig = webpackConfig({
+            dev: false,
+            dirname: path.resolve(__dirname, '../..'),
+        })[0];
 
         return {
             ...config,
-            mode: 'development',
             module: {
                 ...config.module,
-                rules: [
-                    ...mainConfig.module.rules,
-                ],
+                rules: mainConfig.module.rules,
             },
-            resolve: mainConfig.resolve,
+            resolve: {
+                ...config.resolve,
+                extensions: [
+                    ...config.resolve.extensions,
+                    ...mainConfig.resolve.extensions,
+                ],
+                modules: [
+                    ...config.resolve.modules,
+                    ...mainConfig.resolve.modules,
+                ],
+                alias: {
+                    ...config.resolve.alias,
+                    ...mainConfig.resolve.alias,
+                },
+            },
             plugins: [
                 ...config.plugins,
-                ...mainConfig.plugins,
+                mainConfig.plugins[1],
             ],
-        };*/
+        };
     },
 };
