@@ -140,7 +140,6 @@ module.exports = env => {
             },
         },
         plugins: [
-            new FriendlyErrorsWebpackPlugin(),
             new MiniCssExtractPlugin({
                 filename: 'css/[name].css',
                 chunkFilename: 'css/[id].css',
@@ -151,6 +150,7 @@ module.exports = env => {
                 filename: 'index.html',
                 template: path.resolve(dirname, './front/src/index.html'),
             }),
+            new FriendlyErrorsWebpackPlugin(),
         ],
         optimization: {
             runtimeChunk: 'single',

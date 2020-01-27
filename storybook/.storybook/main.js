@@ -32,7 +32,7 @@ module.exports = {
             },
             plugins: [
                 ...config.plugins,
-                mainConfig.plugins[1],
+                mainConfig.plugins[0], // Только MiniCssExtractPlugin
             ],
         };
     },

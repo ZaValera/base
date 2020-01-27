@@ -16,25 +16,11 @@ remove:
 upgrade:
 	$(YARN) upgrade $(filter-out $@,$(MAKECMDGOALS))
 
-build:
+start:
 	make install
-	npm run build
-
-dev:
-	make install
-	npm run dev
-
-watch:
-	make install
-	npm run watch
-
-clean:
-	rm -rf webpack_cache front/build back/build
+	npm run storybook
 
 update:
 	rm -rf $(PACKAGES)
 	$(YARN) cache clean
 	$(YARN) install
-
-server:
-	npm run server
