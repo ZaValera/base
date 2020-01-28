@@ -38,3 +38,6 @@ update:
 
 server:
 	npm run server
+
+sbook:
+	npm run storybook

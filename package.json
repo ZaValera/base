@@ -41,6 +41,7 @@
     "watch": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --watch --env.dev",
     "dev": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --env.dev",
     "build": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js",
-    "server": "node ./back/build/index.js"
+    "server": "node ./back/build/index.js",
+    "storybook": "npm run storybook --prefix ./storybook"
   }
 }
