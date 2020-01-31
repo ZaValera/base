@@ -1,33 +1,42 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const nodeExternals = require('webpack-node-externals');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const {getCommonLoaders, getParams} = require('./webpack.utils');
+
 
 module.exports = env => {
-    const isDev = env && env.dev;
-    const dirname = env && env.dirname || __dirname;
-    const mode = isDev ? 'development' : 'production';
-    const devtool = isDev ? 'inline-source-map' : 'source-map';
-    
-    function getCommonLoaders() {
-        const loaders = [];
-
-        if (isDev) {
-            loaders.push({
-                loader:'cache-loader',
-                options: {
-                    cacheDirectory: path.resolve(dirname, 'webpack_cache'),
-                },
-            });
-        }
-
-        return loaders;
-    }
-
-    const frontConfig = {
+    const {
+        isDev,
+        dirname,
         mode,
         devtool,
+        storybook,
+    } = getParams(env);
+
+    let plugins = [
+        new MiniCssExtractPlugin({
+            filename: 'css/[name].css',
+            chunkFilename: 'css/[id].css',
+        }),
+    ];
+
+    if (!storybook) {
+        plugins.push(
+            new HtmlWebpackPlugin({
+                hash: true,
+                inject: true,
+                filename: 'index.html',
+                template: path.resolve(dirname, './front/src/index.html'),
+            }),
+            new FriendlyErrorsWebpackPlugin(),
+        );
+    }
+
+    return {
+        mode,
+        devtool,
+        plugins,
         target: 'web',
         entry: './front/src/index.tsx',
         output: {
@@ -42,7 +51,7 @@ module.exports = env => {
                     test: /\.tsx?$/,
                     exclude: /node_modules/,
                     use: [
-                        ...getCommonLoaders(),
+                        ...getCommonLoaders(dirname, isDev),
                         {
                             loader: 'ts-loader',
                             options: {
@@ -77,7 +86,7 @@ module.exports = env => {
                 {
                     test: /\.css$/,
                     use: [
-                        ...getCommonLoaders(),
+                        ...getCommonLoaders(dirname, isDev),
                         MiniCssExtractPlugin.loader,
                         'css-loader',
                     ],
@@ -86,7 +95,7 @@ module.exports = env => {
                     test: /\.s[ac]ss$/i,
                     exclude: /node_modules/,
                     use: [
-                        ...getCommonLoaders(),
+                        ...getCommonLoaders(dirname, isDev),
                         MiniCssExtractPlugin.loader,
                         {
                             loader: 'css-loader',
@@ -139,19 +148,6 @@ module.exports = env => {
                 './front': path.resolve(dirname, 'front'), // для url() в scss
             },
         },
-        plugins: [
-            new MiniCssExtractPlugin({
-                filename: 'css/[name].css',
-                chunkFilename: 'css/[id].css',
-            }),
-            new HtmlWebpackPlugin({
-                hash: true,
-                inject: true,
-                filename: 'index.html',
-                template: path.resolve(dirname, './front/src/index.html'),
-            }),
-            new FriendlyErrorsWebpackPlugin(),
-        ],
         optimization: {
             runtimeChunk: 'single',
             splitChunks: {
@@ -188,54 +184,4 @@ module.exports = env => {
             },
         },
     };
-
-    const backConfig = {
-        mode,
-        devtool,
-        target: 'node',
-        entry: './back/src/index.ts',
-        output: {
-            filename: 'index.js',
-            path: path.resolve(dirname, 'back/build'),
-            publicPath: '/build/',
-        },
-        node: {
-            __dirname: false,
-        },
-        externals: [nodeExternals()],
-        module: {
-            rules: [
-                {
-                    test: /\.ts$/,
-                    exclude: /node_modules/,
-                    use: [
-                        ...getCommonLoaders(),
-                        {
-                            loader: 'ts-loader',
-                            options: {
-                                configFile: path.resolve(dirname, 'back/tsconfig.json'),
-                                experimentalWatchApi: true,
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
-        resolve: {
-            extensions: ['.ts', '.js'],
-            // modules: ['node_modules'],
-            alias: {
-                src: path.resolve(dirname, './back/src'),
-                shared: path.resolve(dirname, './shared'),
-            },
-        },
-        plugins: [
-            new FriendlyErrorsWebpackPlugin(),
-        ],
-    };
-
-    return [
-        frontConfig,
-        backConfig,
-    ];
 };

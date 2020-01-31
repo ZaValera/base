@@ -1,4 +1,4 @@
-const webpackConfig = require('../../webpack.config');
+const webpackConfig = require('../../webpack.front.config');
 const path = require('path');
 
 module.exports = {
@@ -7,7 +7,8 @@ module.exports = {
         const mainConfig = webpackConfig({
             dev: false,
             dirname: path.resolve(__dirname, '../..'),
-        })[0];
+            storybook: true,
+        });
 
         return {
             ...config,
@@ -32,7 +33,7 @@ module.exports = {
             },
             plugins: [
                 ...config.plugins,
-                mainConfig.plugins[0], // Только MiniCssExtractPlugin
+                ...mainConfig.plugins,
             ],
         };
     },

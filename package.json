@@ -38,9 +38,11 @@
     "@types/react": "16.9.16"
   },
   "scripts": {
-    "watch": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --watch --env.dev",
-    "dev": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js --env.dev",
-    "build": "node ./node_modules/.bin/webpack-cli --config ./webpack.config.js",
+    "watch": "node ./node_modules/.bin/webpack-cli --config ./webpack.front.config.js --config ./webpack.back.config.js --watch --env.dev",
+    "dev": "node ./node_modules/.bin/webpack-cli --config ./webpack.front.config.js --config ./webpack.back.config.js --env.dev",
+    "front": "node ./node_modules/.bin/webpack-cli --config ./webpack.front.config.js --env.dev",
+    "back": "node ./node_modules/.bin/webpack-cli --config ./webpack.back.config.js --env.dev",
+    "build": "node ./node_modules/.bin/webpack-cli --config ./webpack.front.config.js --config ./webpack.back.config.js",
     "server": "node ./back/build/index.js",
     "storybook": "npm run storybook --prefix ./storybook"
   }

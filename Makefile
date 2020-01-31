@@ -1,3 +1,5 @@
+.PHONY: front back storybook
+
 YARN = ./yarn/bin/yarn
 PACKAGES = packages-cache node_modules webpack_cache
 
@@ -24,6 +26,14 @@ dev:
 	make install
 	npm run dev
 
+front:
+	make install
+	npm run front
+
+back:
+	make install
+	npm run back
+
 watch:
 	make install
 	npm run watch
@@ -39,5 +49,5 @@ update:
 server:
 	npm run server
 
-sbook:
+storybook:
 	npm run storybook
