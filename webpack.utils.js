@@ -21,6 +21,7 @@ exports.getParams = function (env) {
     const mode = isDev ? 'development' : 'production';
     const devtool = isDev ? 'inline-source-map' : 'source-map';
     const storybook = env && env.storybook;
+    const hmr = env && env.hmr;
 
     return {
         isDev,
@@ -28,5 +29,6 @@ exports.getParams = function (env) {
         mode,
         devtool,
         storybook,
+        hmr,
     };
 };

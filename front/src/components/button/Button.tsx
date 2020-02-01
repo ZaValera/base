@@ -1,11 +1,14 @@
+import { hot } from 'react-hot-loader/root';
 import * as React from 'react';
 import * as styles from './button.scss';
 
 
-export function Button() {
+export function ButtonSimple() {
     return (
         <div className={styles.button}>
-            Push me, baby
+            Push me, baby 123
         </div>
     );
 }
+
+export const Button = hot(ButtonSimple);

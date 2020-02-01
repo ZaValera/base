@@ -49,5 +49,8 @@ update:
 server:
 	npm run server
 
+hotServer:
+	npm run hotServer
+
 storybook:
 	npm run storybook

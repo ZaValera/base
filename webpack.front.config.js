@@ -1,7 +1,9 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const {getCommonLoaders, getParams} = require('./webpack.utils');
 
 
@@ -12,6 +14,7 @@ module.exports = env => {
         mode,
         devtool,
         storybook,
+        hmr,
     } = getParams(env);
 
     let plugins = [
@@ -26,22 +29,35 @@ module.exports = env => {
             new HtmlWebpackPlugin({
                 hash: true,
                 inject: true,
+                alwaysWriteToDisk: hmr,
                 filename: 'index.html',
                 template: path.resolve(dirname, './front/src/index.html'),
             }),
             new FriendlyErrorsWebpackPlugin(),
         );
+
+        if (hmr) {
+            plugins.push(
+                new HtmlWebpackHarddiskPlugin(),
+                new webpack.HotModuleReplacementPlugin(),
+            );
+        }
     }
+
+    const commonLoaders = getCommonLoaders(dirname, isDev);
 
     return {
         mode,
         devtool,
         plugins,
         target: 'web',
-        entry: './front/src/index.tsx',
+        entry: [
+            'webpack-hot-middleware/client',
+            './front/src/index.tsx'
+        ],
         output: {
-            filename: '[name].[contenthash].js',
-            chunkFilename: '[name].[chunkhash].js',
+            filename: '[name].[hash].js',
+            chunkFilename: '[name].[hash].js',
             path: path.resolve(dirname, 'front/build'),
             publicPath: '/build/',
         },
@@ -51,7 +67,7 @@ module.exports = env => {
                     test: /\.tsx?$/,
                     exclude: /node_modules/,
                     use: [
-                        ...getCommonLoaders(dirname, isDev),
+                        ...commonLoaders,
                         {
                             loader: 'ts-loader',
                             options: {
@@ -86,7 +102,7 @@ module.exports = env => {
                 {
                     test: /\.css$/,
                     use: [
-                        ...getCommonLoaders(dirname, isDev),
+                        ...commonLoaders,
                         MiniCssExtractPlugin.loader,
                         'css-loader',
                     ],
@@ -95,7 +111,7 @@ module.exports = env => {
                     test: /\.s[ac]ss$/i,
                     exclude: /node_modules/,
                     use: [
-                        ...getCommonLoaders(dirname, isDev),
+                        ...commonLoaders,
                         MiniCssExtractPlugin.loader,
                         {
                             loader: 'css-loader',
