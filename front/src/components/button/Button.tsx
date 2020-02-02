@@ -6,7 +6,7 @@ import * as styles from './button.scss';
 export function ButtonSimple() {
     return (
         <div className={styles.button}>
-            Push me, baby 123
+            Push me, baby
         </div>
     );
 }

@@ -1,9 +1,9 @@
 const path = require('path');
 
-exports.getCommonLoaders = function (dirname, isDev) {
+exports.getCommonLoaders = function (dirname, isDev, hmr) {
     const loaders = [];
 
-    if (isDev) {
+    if (isDev && !hmr) {
         loaders.push({
             loader:'cache-loader',
             options: {

@@ -31,6 +31,7 @@ module.exports = env => {
                 inject: true,
                 alwaysWriteToDisk: hmr,
                 filename: 'index.html',
+                favicon: path.resolve(dirname, './front/assets/images/favicon.ico'),
                 template: path.resolve(dirname, './front/src/index.html'),
             }),
             new FriendlyErrorsWebpackPlugin(),
@@ -44,17 +45,20 @@ module.exports = env => {
         }
     }
 
-    const commonLoaders = getCommonLoaders(dirname, isDev);
+    const commonLoaders = getCommonLoaders(dirname, isDev, hmr);
+
+    const entry = ['./front/src/index.tsx'];
+
+    if (hmr) {
+        entry.push('webpack-hot-middleware/client');
+    }
 
     return {
         mode,
         devtool,
         plugins,
+        entry,
         target: 'web',
-        entry: [
-            'webpack-hot-middleware/client',
-            './front/src/index.tsx'
-        ],
         output: {
             filename: '[name].[hash].js',
             chunkFilename: '[name].[hash].js',

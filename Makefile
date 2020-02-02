@@ -1,7 +1,7 @@
 .PHONY: front back storybook
 
 YARN = ./yarn/bin/yarn
-PACKAGES = packages-cache node_modules webpack_cache
+PACKAGES = packages-cache node_modules
 
 install:
 	$(YARN) install --offline
