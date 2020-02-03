@@ -19,8 +19,8 @@ module.exports = env => {
 
     let plugins = [
         new MiniCssExtractPlugin({
-            filename: 'css/[name].css',
-            chunkFilename: 'css/[id].css',
+            filename: 'css/[name].[hash].css',
+            chunkFilename: 'css/[id].[hash].css',
         }),
     ];
 
@@ -39,8 +39,8 @@ module.exports = env => {
 
         if (hmr) {
             plugins.push(
-                new HtmlWebpackHarddiskPlugin(),
                 new webpack.HotModuleReplacementPlugin(),
+                new HtmlWebpackHarddiskPlugin(),
             );
         }
     }
@@ -116,7 +116,14 @@ module.exports = env => {
                     exclude: /node_modules/,
                     use: [
                         ...commonLoaders,
-                        MiniCssExtractPlugin.loader,
+                        /*{
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {
+                                hmr,
+                                // reloadAll: true,
+                            },
+                        },*/
+                        hmr ? 'style-loader' : MiniCssExtractPlugin.loader,
                         {
                             loader: 'css-loader',
                             options: {
