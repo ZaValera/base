@@ -13,7 +13,7 @@ export class Model<S> implements IModelClass<S>{
     state: S;
 
     __constructor: typeof Model;
-    __reactSetState: React.Dispatch<Partial<S>>;
+    __componentUpdate: Function;
     __changed: boolean;
 
     constructor(props?: Partial<S>) {
@@ -44,14 +44,14 @@ export class Model<S> implements IModelClass<S>{
             ...newState,
         };
 
-        if (this.__reactSetState && changed && !bySelf) {
-            this.__reactSetState(this.state);
+        if (this.__componentUpdate && changed && !bySelf) {
+            this.__componentUpdate();
             this.__changed = true;
         }
     }
 
-    connectToState(setState: React.Dispatch<Partial<S>>) {
-        this.__reactSetState = setState;
+    __connectToComponent(update: Function) {
+        this.__componentUpdate = update;
     }
 
     __filterProps(props: IHash) {
@@ -86,7 +86,7 @@ export class Model<S> implements IModelClass<S>{
 
                 return (
                     <Context.Consumer>
-                        {({model}: any) => {
+                        {(model: Model<any>) => {
                             if (model === null) {
                                 throw new Error(`Connect without provider: ${Constructor.name}`);
                             }
@@ -105,7 +105,7 @@ export class Model<S> implements IModelClass<S>{
         };
     };
 
-    static provider = function () {
+    /*static provider = function () {
         const Constructor = this;
         const Context = Constructor.__getContext();
 
@@ -115,15 +115,50 @@ export class Model<S> implements IModelClass<S>{
                     return props.inject || new Constructor(props);
                 });
 
-                const [, setState] = useState(model.state);
+                const [flag, setFlag] = useState(false);
 
-                model.connectToState(setState);
+                model.__connectToComponent(() => {
+                    setFlag(!flag);
+                });
 
                 return (
-                    <Context.Provider value={{model}}>
+                    <Context.Provider value={model}>
                         <WrappedComponent {...props}/>
                     </Context.Provider>
                 );
+            };
+        };
+    };*/
+
+    static provider = function () {
+        const Constructor = this;
+        const Context = Constructor.__getContext();
+
+        return function (WrappedComponent: any) {
+            return class WithProvider extends React.PureComponent<any, any> {
+                model: Model<any>;
+
+                constructor(props: any) {
+                    super(props);
+
+                    this.state = {
+                        flag: false,
+                    };
+
+                    this.model = props.inject || new Constructor(props);
+
+                    this.model.__connectToComponent(() => {
+                        this.setState({flag: !this.state.flag});
+                    });
+                }
+
+                render() {
+                    return (
+                        <Context.Provider value={this.model}>
+                            <WrappedComponent {...this.props}/>
+                        </Context.Provider>
+                    );
+                }
             };
         };
     };

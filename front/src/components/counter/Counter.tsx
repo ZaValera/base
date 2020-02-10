@@ -5,8 +5,6 @@ import {CounterModel} from './CounterModel';
 export function Counter(props: IProps) {
     const {count, setCount} = props;
 
-    console.log('Render');
-
     return (
         <div>
             Счёт: {count}
