@@ -10,21 +10,27 @@ interface IModelClass<S> {
 export class Model<S> implements IModelClass<S>{
     static defaultState: any;
     static Context: React.Context<any>;
+    static instances = new WeakSet();
+    static ids: any = [];
     state: S;
 
     __constructor: typeof Model;
     __componentUpdate: Function;
     __changed: boolean;
+    __prevProps: Partial<S>;
 
     constructor(props?: Partial<S>) {
         this.__constructor = this.constructor as typeof Model;
 
         this.__changed = false;
+        this.__prevProps = {};
 
         this.state = {
             ...this.__constructor.defaultState,
             ...this.__filterProps(props),
         };
+
+        Model.instances.add(this);
     }
 
     setState(newState: Partial<S>, bySelf?: boolean) {
@@ -54,7 +60,11 @@ export class Model<S> implements IModelClass<S>{
         this.__componentUpdate = update;
     }
 
-    __filterProps(props: IHash) {
+    __disconnect() {
+        this.__componentUpdate = null;
+    }
+
+    __filterProps(props: IHash): Partial<S> {
         const filteredProps: Partial<S> = {};
 
         if (!props) {
@@ -73,7 +83,24 @@ export class Model<S> implements IModelClass<S>{
     }
 
     __setFilteredState(props: IHash) {
-        this.setState(this.__filterProps(props), true);
+        const filteredProps = this.__filterProps(props);
+        const propsToSet: Partial<S> = {};
+        let changed = false;
+
+        for (const [key, value] of Object.entries<any>(filteredProps)) {
+            const name = key as keyof S;
+
+            if (this.__prevProps[name] !== value) {
+                propsToSet[name] = value;
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            this.__prevProps = filteredProps;
+
+            this.setState(propsToSet, true);
+        }
     }
 
     static connect = function (mapStateToProps: TMapStateToProps) {
@@ -81,9 +108,7 @@ export class Model<S> implements IModelClass<S>{
         const Context = Constructor.__getContext();
 
         return function (WrappedComponent: any) {
-
             return function (props: any) {
-
                 return (
                     <Context.Consumer>
                         {(model: Model<any>) => {
@@ -97,7 +122,7 @@ export class Model<S> implements IModelClass<S>{
 
                             model.__changed = false;
 
-                            return (<WrappedComponent {...props} {...mapStateToProps(model)}/>);
+                            return (<WrappedComponent {...props} {...mapStateToProps(model, props)}/>);
                         }}
                     </Context.Consumer>
                 );
@@ -105,32 +130,7 @@ export class Model<S> implements IModelClass<S>{
         };
     };
 
-    /*static provider = function () {
-        const Constructor = this;
-        const Context = Constructor.__getContext();
-
-        return function (WrappedComponent: any) {
-            return function (props: any) {
-                const [model] = useState(() => {
-                    return props.inject || new Constructor(props);
-                });
-
-                const [flag, setFlag] = useState(false);
-
-                model.__connectToComponent(() => {
-                    setFlag(!flag);
-                });
-
-                return (
-                    <Context.Provider value={model}>
-                        <WrappedComponent {...props}/>
-                    </Context.Provider>
-                );
-            };
-        };
-    };*/
-
-    static provider = function () {
+    static provide = function () {
         const Constructor = this;
         const Context = Constructor.__getContext();
 
@@ -159,6 +159,10 @@ export class Model<S> implements IModelClass<S>{
                         </Context.Provider>
                     );
                 }
+
+                componentWillUnmount() {
+                    this.model.__disconnect();
+                }
             };
         };
     };
@@ -174,8 +178,12 @@ export class Model<S> implements IModelClass<S>{
     }
 }
 
+setInterval(function() {
+    console.log(Model.instances);
+}, 3000);
+
 interface IHash {
     [key: string]: any;
 }
 
-type TMapStateToProps = (model: any) => {[key: string]: any};
+type TMapStateToProps = (model: any, ownProps: any) => {[key: string]: any};

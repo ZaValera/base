@@ -3,11 +3,11 @@ import {compose} from 'src/compose';
 import {CounterModel} from './CounterModel';
 
 export function Counter(props: IProps) {
-    const {count, setCount} = props;
+    const {count, setCount, title} = props;
 
     return (
         <div>
-            Счёт: {count}
+            {title || 'Счёт'}: {count}
             <button onClick={() => setCount(0)}>Сбросить</button>
             <button onClick={() => setCount(count - 1)}>-</button>
             <button onClick={() => setCount(count + 1)}>+</button>
@@ -17,22 +17,28 @@ export function Counter(props: IProps) {
 
 export function Parent(props: IProps) {
     const [parentCount, setParentCount] = React.useState(123);
+    const [title, setTitle] = React.useState('Заголовок');
 
     return (
         <div>
-            With parent <button onClick={() => setParentCount(parentCount + 1)}>cбросить</button>
-            <ConnectedCounter count={parentCount}/>
+            With parent
+            <button onClick={() => setParentCount(parentCount + 1)}>прибавить</button>
+            <button onClick={() => setTitle(title + ' еще')}>изменить title</button>
+            <div>Счетчик родителя {parentCount}</div>
+            <div>Title родителя {title}</div>
+            <ConnectedCounter count={parentCount} title={title}/>
         </div>
     );
 }
 
 export const ProvidedParent = compose(
-    CounterModel.provider(),
+    CounterModel.provide(),
 )(Parent);
 
 interface IProps {
     count: number;
     setCount: (count: number) => void;
+    title?: string;
 }
 
 export const ConnectedCounter = compose(
@@ -43,7 +49,7 @@ export const ConnectedCounter = compose(
 )(Counter);
 
 export const ProvidedCounter = compose(
-    CounterModel.provider(),
+    CounterModel.provide(),
 )(ConnectedCounter);
 
 

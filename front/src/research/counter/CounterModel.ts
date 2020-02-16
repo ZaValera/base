@@ -1,4 +1,4 @@
-import {Model} from 'src/model/Model';
+import {Model} from 'src/research/model/Model';
 
 export class CounterModel extends Model<IState> {
     static defaultState = {

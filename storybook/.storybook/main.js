@@ -2,7 +2,7 @@ const webpackConfig = require('../../webpack.front.config');
 const path = require('path');
 
 module.exports = {
-    stories: ['../stories/*.[tj]sx'],
+    stories: ['../stories/**/*.[tj]sx'],
     webpackFinal: (config) => {
         const mainConfig = webpackConfig({
             dev: false,
